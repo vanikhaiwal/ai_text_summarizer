@@ -1,0 +1,24 @@
+
+
+services:
+  backend:  # Name of first service
+    build: ./backend  # Build image from backend Dockerfile
+    ports:
+      - "5000:5000"  # Expose port 5000 to host
+    env_file:
+      - ./backend/.env  # Load API keys & env vars
+    networks:
+      - ai-network  # Put backend in custom network
+
+  frontend:  # Name of second service
+    build: ./frontend  # Build image from frontend Dockerfile
+    ports:
+      - "80:80"  # Expose port 80 to host
+    networks:
+      - ai-network  # Same network as backend
+    depends_on:
+      - backend  # Ensure backend starts first
+
+networks:
+  ai-network:  # Custom network so containers can talk
+    driver: bridge
